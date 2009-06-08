@@ -1,0 +1,21 @@
+<event>
+    <ide>
+        <rdsview>
+            <database name="cfartgallery">
+                <table name="APP.ART">
+                    <fields>
+                        <field name="ARTID" type="INTEGER" length="10"/><field name="ARTISTID" type="INTEGER" length="10"/><field name="ARTNAME" type="VARCHAR" length="50"/><field name="DESCRIPTION" type="CLOB" length="2147483647"/><field name="PRICE" type="DECIMAL" length="19"/><field name="LARGEIMAGE" type="VARCHAR" length="30"/><field name="MEDIAID" type="INTEGER" length="10"/><field name="ISSOLD" type="SMALLINT" length="5"/>
+                    </fields>
+                </table>
+            </database>
+        </rdsview>
+    </ide>
+    <user>
+    <input name="generateAppCFC" value="true"/>
+	<input name="generateView" value="true"/>
+	<input name="ORMAsCFscript" value="true"/>
+	<input name="DoAll" value="true"/>
+	<input name="Location" value="/Users/terryr/Sites/centaur.dev/SOTRDemo"/>
+	<input name="generateRemoteServices" value="true"/>
+    </user>
+</event>
