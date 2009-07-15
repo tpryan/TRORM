@@ -278,29 +278,36 @@ component{
 	    view.AppendBody('<cfparam name="url.id" type="numeric" default="0" />');
 	    view.AppendBody('<cfparam name="url.message" type="string" default="" />');
 	    view.AppendBody('<cfimport path="cfc.*" />');
+		view.AppendBody();
 	   	view.AppendBody('<cf_pageWrapper>');
 	   	view.AppendBody('<h1>#dbname#</h1>');
 	   	view.AppendBody('<h2>#table#</h2>');
+		view.AppendBody('<cfoutput><p><a href="index.cfm">Main</a> / <a href="##cgi.script_name##">#table# List</a></cfoutput>');
+		view.AppendBody();
 	    view.AppendBody('<cfswitch expression="##url.method##" >');
+		view.AppendBody();
 	   	view.AppendBody('	<cfcase value="list">');
 	    view.AppendBody('		<cfset #table#Array = entityLoad("' & table  & '") />');
 	    view.AppendBody('		<cf_#table#List #table#Array = "###table#Array##" message="##url.message##" /> ');
 	    view.AppendBody('	</cfcase>');
+		view.AppendBody();
 	    view.AppendBody('	<cfcase value="read">');
 	    view.AppendBody('		<cfset #table# = entityLoad("' & table  & '", url.id, true) />');
 	    view.AppendBody('		<cf_#table#Read #table# = "###table###" /> ');
 	    view.AppendBody('	</cfcase>');
+		view.AppendBody();
 	    view.AppendBody('	<cfcase value="edit">');
 	    view.AppendBody('		<cfif url.id eq 0>');
 	    view.AppendBody('			<cfset #table# = New ' & table  & '() />');
 	    view.AppendBody('		<cfelse>');
 	    view.AppendBody('			<cfset #table# = entityLoad("' & table  & '", url.id, true) />');
 	    view.AppendBody('		</cfif>');
-	    
+		view.AppendBody();
 	    view.AppendBody('		<cf_#table#Edit #table# = "###table###" message="##url.message##" /> ');
 	    view.AppendBody('	</cfcase>');
+		view.AppendBody();
 	    view.AppendBody('	<cfcase value="edit_process">');
-	    view.AppendBody('		<cfset #table# = New ' & table  & '() />');
+	    view.AppendBody('		<cfset #table# = EntityNew("' & table  & '") />');
 	    
 	    for (i= 1; i lte tableData.columns.recordCount; i++){
 	    	if(tableData.columns.is_primarykey[i]){
@@ -317,16 +324,16 @@ component{
 	    view.AppendBody('		<cflocation url ="##cgi.script_name##?method=edit&id=###table#.getIDValue()##&message=updated" />');
 	    
 	    view.AppendBody('	</cfcase>');
-	    
-	    
+	    view.AppendBody();
 	    view.AppendBody('	<cfcase value="delete_process">');
 	    view.AppendBody('		<cfset #table# = entityLoad("' & table  & '", url.id, true) />');
 	    view.AppendBody('		<cfset EntityDelete(#table#) />');
  	    view.AppendBody('		<cfset ORMFlush() />');
 		view.AppendBody('		<cflocation url ="##cgi.script_name##?method=list&message=deleted" />');
 	    view.AppendBody('	</cfcase>');
-	    
+		view.AppendBody();   
 	    view.AppendBody('</cfswitch>');
+		view.AppendBody();
 	    view.AppendBody('</cf_pageWrapper>');
 	    return view;
 	}

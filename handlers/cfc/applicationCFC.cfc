@@ -1,98 +1,128 @@
-<cfcomponent extends="cfc">
+component extends="cfc"{
 	
-	
-	<cffunction name="init" output="false" hint="Psuedo constructor, and all around nice function." >
+	public applicationCFC function init(){
+		variables.lineBreak = createObject("java", "java.lang.System").getProperty("line.separator");
 		
-		<cfset variables.lineBreak = createObject("java", "java.lang.System").getProperty("line.separator") />
+		This.setOutput(FALSE); 
+		This.setExtension('cfc');
+		variables.constructorArray = ArrayNew(1);
+		variables.functionArray = ArrayNew(1);
+		variables.propertyArray = ArrayNew(1);
+		variables.appPropertyArray = ArrayNew(1);
 		
-		<cfset setOutput(FALSE) /> 
-		<cfset setExtension('cfc') />
-		<cfset variables.constructorArray = ArrayNew(1) />
-		<cfset variables.functionArray = ArrayNew(1) />
-		<cfset variables.propertyArray = ArrayNew(1) />
-		<cfset variables.appPropertyArray = ArrayNew(1) />
-		
-		
-		<cfreturn This />
-	</cffunction>
-	
-	<cffunction access="public" name="addApplicationProperty" output="FALSE" returntype="void" hint="Adds the code of a property to the CFC.">
-		<cfargument name="name" type="string" required="no" hint="The name of the app property to add to the cfc." />
-		<cfargument name="value" type="string" required="no" hint="The value of the app property to add to the cfc." />
-		<cfargument name="surroundwithQuotes" type="boolean" required="no" hint="Whether or not to surround the value with quotes." />
-		
-		<cfset var appProp = structNew() />
-		<cfset appProp.name = arguments.name />
-		<cfset appProp.value = arguments.value />
-		
-		<cfif structKeyExists(arguments, "surroundwithQuotes")>
-			<cfset appProp.quote = arguments.surroundwithQuotes />
-		<cfelse>
-			<cfset appProp.quote = "" />
-		</cfif>
-		
-		
-		<cfset ArrayAppend(variables.appPropertyArray, appProp) />
-	</cffunction>
-	
-	<cffunction name="generateCFMLApplicationProperties" output="FALSE" access="private"  returntype="string" hint="" >
-		<cfset var props = variables.lineBreak />
-		<cfloop array="#variables.appPropertyArray#" index="propStruct">
-			<cfif (isNumeric(propStruct.value) or isBoolean(propStruct.value)) OR (ISBoolean(propStruct.quote) and not propStruct.quote) >
-				<cfset props = props & '	<cfset This.' & propStruct.name & ' = ' & propStruct.value & ' />' & variables.lineBreak  />
-			<cfelse>
-				<cfset props = props & '	<cfset This.' & propStruct.name & ' = "' & propStruct.value & '" />' & variables.lineBreak  />
-			</cfif>
-			
-			
-		</cfloop>
-		
-		<cfreturn props />
-	</cffunction>
-	
-	<cffunction name="generateCFScriptApplicationProperties" output="FALSE" access="private"  returntype="string" hint="" >
-		<cfset var props = variables.lineBreak />
-		
-		<cfloop array="#variables.appPropertyArray#" index="propStruct">
-			<cfif (isNumeric(propStruct.value) or isBoolean(propStruct.value)) OR (ISBoolean(propStruct.quote) and not propStruct.quote) >
-				<cfset props = props & '	This.' & propStruct.name & ' = ' & propStruct.value & ';' & variables.lineBreak  />
-			<cfelse>
-				<cfset props = props & '	This.' & propStruct.name & ' = "' & propStruct.value & '";' & variables.lineBreak  />
-			</cfif>
-			
-			
-		</cfloop>
-		<cfreturn props />
-	</cffunction>
-	
-	<cffunction access="public" name="getCFML" output="false" returntype="string" hint="Returns the actual cfml cfc code.">
-		<cfset var results = "" />
+		return This;
+	}
 
-		<!--- Add the header to the cfc feed. --->
-		<cfset results = results & generateCFMLHeader() />
-		<cfset results = results & generateCFMLProperties()   />
-		<cfset results = results & generateCFMLApplicationProperties()   />
-		<cfset results = results & generateCFMLConstructor() />
-		<cfset results = results & generateCFMLFunctions() />
-		<!--- Add the footer to the cfc feed. --->
-		<cfset results = results & generateCFMLFooter() />
+	/**
+		* @hint Adds the code of a property to the CFC.
+	*/
+	public function addApplicationProperty(	required string name, 
+											required string value, 
+											boolean surroundWithQuotes){
+		var appProp = structNew();
+		appProp.name = arguments.name;
+		appProp.value = arguments.value;
+		
+		if (structKeyExists(arguments, "surroundwithQuotes")){
+			appProp.quote = arguments.surroundwithQuotes;
+		}
+		else{
+			appProp.quote = "";
+		}
+		
+		ArrayAppend(variables.appPropertyArray, appProp);
+		
+	}
 
-		<cfreturn results />
-	</cffunction>
+
+	/**
+		* @hint Adds the code of a property to the CFC.
+	*/
+	public string function generateCFMLApplicationProperties(){
+		var props = variables.lineBreak;
+		var i = 0;
+		var propStruct = structNew();
+		for(i = 1; i lte ArrayLen(variables.appPropertyArray); i++ ){
+			propStruct = variables.appPropertyArray[i];
+			if ((	isNumeric(propStruct.value) OR 
+					isBoolean(propStruct.value)) OR 
+					(ISBoolean(propStruct.quote) and not propStruct.quote) )
+			{
+				props = props & '	<cfset This.' & propStruct.name & ' = ' & propStruct.value & ' />' & variables.lineBreak ;
+			}
+			else{
+				props = props & '	<cfset This.' & propStruct.name & ' = "' & propStruct.value & '" />' & variables.lineBreak ;
+			}
+		}
+			
+		return props;
+		
+	}
+
+	public string function generateCFScriptApplicationProperties(){
+		var props = variables.lineBreak;
+		var i = 0;
+		var propStruct = structNew();
+		
+		
+		for(i = 1; i lte ArrayLen(variables.appPropertyArray); i++ ){
+			propStruct = variables.appPropertyArray[i];
+			if ((	isNumeric(propStruct.value) OR 
+					isBoolean(propStruct.value)) OR 
+					(ISBoolean(propStruct.quote) and not propStruct.quote) )
+			{
+				props = props & '	This.' & propStruct.name & ' = ' & propStruct.value & ';' & variables.lineBreak ;
+			}
+			else{
+				props = props & '	This.' & propStruct.name & ' = "' & propStruct.value & '";' & variables.lineBreak ;
+			}
+		}
+			
+		return props;
+		
+	}
+
+	/**
+		* @hint Returns the actual cfml cfc code.
+	*/
+	public string function getCFML(){
+		var results = "";
+
+		/* Add the header to the cfc feed. */
+		results = results & generateCFMLHeader();
+		results = results & generateCFMLProperties()  ;
+		results = results & generateCFMLApplicationProperties()  ;
+		results = results & generateCFMLConstructor();
+		results = results & generateCFMLFunctions();
+		/* Add the footer to the cfc feed. */
+		results = results & generateCFMLFooter();
+
+		return results;
+	}
 	
-	<cffunction access="public" name="getCFScript" output="false" returntype="string" hint="Returns the actual CFScript cfc code.">
-		<cfset var results = "" />
-
-		<!--- Add the header to the cfc feed. --->
-		<cfset results = results & generateCFScriptHeader() />
-		<cfset results = results & generateCFScriptProperties()   />
-		<cfset results = results & generateCFScriptApplicationProperties()   />
-		<cfset results = results & generateCFScriptConstructor() />
-		<cfset results = results & generateCFScriptFunctions() />
-		<!--- Add the footer to the cfc feed. --->
-		<cfset results = results & generateCFScriptFooter() />
-
-		<cfreturn results />
-	</cffunction>
 	
-</cfcomponent>
+	/**
+		* @hint Returns the actual cfscript cfc code.
+	*/
+	public string function getCFScript(){
+		var results = "";
+
+		/* Add the header to the cfc feed. */
+		results = results & generateCFScriptHeader();
+		results = results & generateCFScriptProperties()  ;
+		results = results & generateCFScriptApplicationProperties()  ;
+		results = results & generateCFScriptConstructor();
+		results = results & generateCFScriptFunctions();
+		/* Add the footer to the cfc feed. */
+		results = results & generateCFScriptFooter();
+
+		return results;
+	}
+}
+
+
+	
+	
+	
+	
+	

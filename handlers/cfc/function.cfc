@@ -1,255 +1,241 @@
-<!---    function.cfc
+component{
 
-CREATED				: Terrence Ryan
-DESCRIPTION			: Allows you to write the representation of cffunction code to an object, for writing functions dynamically. .
----->
-<cfcomponent output="false" >
-
-	<cfproperty name="name" />
-	<cfproperty name="output" type="boolean"  default="false"/>
-	<cfproperty name="access" />
-	<cfproperty name="hint" />
-	<cfproperty name="returntype" />
-	<cfproperty name="ReturnResult" />
-
-	<cffunction name="init" output="false" hint="Psuedo constructor, and all around nice function." >
-		
-		<cfset variables.lineBreak = createObject("java", "java.lang.System").getProperty("line.separator") />
-		
-		<cfset variables.arguments = ArrayNew(1) />
-		<cfset variables.localvariables = ArrayNew(1) />
-		<cfset variables.operation = CreateObject("java","java.lang.StringBuilder").Init() />
-		<cfset variables.operationScript = CreateObject("java","java.lang.StringBuilder").Init() />
-		
-		<cfreturn This />
-	</cffunction>
-
-
-	<cffunction access="public" name="addArgument" output="false" returntype="void" description="Adds argument to a function. ">
-		<cfargument name="argument" type="argument" required="TRUE" hint="" />
-		<cfset ArrayAppend(variables.arguments, arguments.argument) />
-	</cffunction>
-
-	<cffunction access="public" name="AddLocalVariable" output="false" returntype="void" description="Adds var scope delclaration to a function.">
-		<cfargument name="LocalVariable" type="string" required="yes" />
-		<cfargument name="type" type="string" required="no" default="string" />
-		<cfargument name="value" type="string" required="no" default="" />
-		<cfargument name="quote" type="boolean" default="TRUE" />
-
-		<cfset ArrayAppend(variables.localVariables, Duplicate(arguments)) />
-
-	</cffunction>
-
-	<cffunction access="public" name="AddOperation" output="false" returntype="void" description="Adds code section to the function.">
-		<cfargument name="Operation" type="string" required="yes" />
-
-		<cfset variables.operation = variables.operation.append(arguments.operation & lineBreak) />
-
-	</cffunction>
-
-	<cffunction access="public" name="AddOperationScript" output="false" returntype="void" description="Adds code section to the function.">
-		<cfargument name="Operation" type="string" required="yes" />
-
-		<cfset variables.operationScript = variables.operationScript.append(arguments.operation & lineBreak) />
-
-	</cffunction>
+	property name="name";
+	property name="output" type="boolean"  default="false";
+	property name="access";
+	property name="hint";
+	property name="returntype";
+	property name="ReturnResult";
 	
 	
-	<cffunction name="generateCFMLHeader" output="FALSE" access="public"  returntype="string" hint="" >
-		<cfset var header = '	<cffunction' />
-		
-		<cfif len(getName()) gt 0>
-			<cfset header = ListAppend(header, 'name="#getName()#"', ' ')  />
-		</cfif>
-		
-		<cfif len(getAccess()) gt 0>
-			<cfset header = ListAppend(header, 'access="#getAccess()#"', ' ')  />
-		</cfif>
-		
-		<cfif len(getOutput())>
-			<cfset header = ListAppend(header, 'output="#getOutput()#"', ' ')  />
-		</cfif>
-		
-		<cfif len(getReturntype()) gt 0>
-			<cfset header = ListAppend(header, 'returnType="#getReturntype()#"', ' ')  />
-		</cfif>
-		
-		<cfset header = ListAppend(header, '>' & variables.lineBreak, ' ')  />
-		
-		<cfreturn header />
-	</cffunction>
-	
-	<cffunction name="generateCFScriptHeader" output="FALSE" access="public"  returntype="string" hint="" >
-		<cfset var header = '' />
-		<cfset var IsPreFunction = false />
-		
-		<cfif len(getAccess()) gt 0>
-			<cfset var IsPreFunction = true />
-			<cfset header = '	#getAccess()#'  />
-		</cfif>
-		
-		<cfif len(getReturntype()) gt 0>
-			<cfset var IsPreFunction = true />
-			<cfif IsPreFunction>
-				<cfset header = ListAppend(header, '#getReturntype()#', ' ')  />
-			<cfelse>
-				<cfset header = '	#getReturntype()#'  />
-			</cfif>
+	public function init(){
+		variables.lineBreak = createObject("java", "java.lang.System").getProperty("line.separator");
+		variables.arguments = ArrayNew(1);
+		variables.localvariables = ArrayNew(1);
+		variables.operation = CreateObject("java","java.lang.StringBuilder").Init();
+		variables.operationScript = CreateObject("java","java.lang.StringBuilder").Init();
 			
-			
-		</cfif>
-		
-		<cfif IsPreFunction>
-			<cfset header = ListAppend(header, 'function', ' ')  />
-		<cfelse>
-			<cfset header =	'	function' />
-		</cfif>
-		
-		
-		
-		<cfset header = ListAppend(header, '#getName()#(' & generateCfscriptArguments()  & ')', ' ')  />
-		
-		
-		<cfif len(getOutput())>
-			<cfset header = ListAppend(header, 'output="#getOutput()#"', ' ')  />
-		</cfif>
-		
-		
-		
-		<cfset header = ListAppend(header, '{' & variables.lineBreak, ' ')  />
-		
-		<cfreturn header />
-	</cffunction>
+		return This;
+	}
+
+	public void function addArgument(required argument argument){
+		ArrayAppend(variables.arguments, arguments.argument);
+	}
 	
-	<cffunction name="generateCFMLFooter" output="FALSE" access="private"  returntype="string" hint="" >
-		<cfset var footer = '	</cffunction>' & variables.lineBreak />
-		<cfreturn footer />
-	</cffunction>
+	public void function AddLocalVariable(required string LocalVariable, string type="string", string value="", boolean quote=true){
+		ArrayAppend(variables.localVariables, Duplicate(arguments));
+	}
 	
-	<cffunction name="generateCFScriptFooter" output="FALSE" access="private"  returntype="string" hint="" >
-		<cfset var footer = '	}' & variables.lineBreak />
-		<cfreturn footer />
-	</cffunction>
+	public void function AddOperation(required string Operation){
+		variables.operation = variables.operation.append(arguments.operation & lineBreak);
+	}
 	
-	<cffunction name="generateCFMLArguments" output="FALSE" access="private"  returntype="string" hint="" >
-		<cfset var results =""  />
+	public void function AddOperationScript(required string Operation){
+		variables.operationScript = variables.operationScript.append(arguments.operation & lineBreak);
+	}
+
+	public string function generateCFMLHeader(){
+		var header = '	<cffunction';
 		
-		<cfloop array="#variables.arguments#" index="argObj">
-			<cfset results = results & "		" & argObj.getCFML() />
-		</cfloop>
+		if (len(This.getName()) gt 0){
+			header = ListAppend(header, 'name="#This.getName()#"', ' ');
+		}
 		
-		<cfreturn results />	
-	</cffunction>
+		if (len(This.getAccess()) gt 0){
+			header = ListAppend(header, 'access="#This.getAccess()#"', ' ');
+		}
+		
+		if (len(This.getOutput())){
+			header = ListAppend(header, 'output="#This.getOutput()#"', ' ');
+		}
+		
+		if (len(This.getReturntype()) gt 0){
+			header = ListAppend(header, 'returnType="#This.getReturntype()#"', ' ');
+		}
+		
+		header = ListAppend(header, '>' & variables.lineBreak, ' ');
+		
+		return header ;
+	}
+
+	public string function generateCFScriptHeader(){
+		var header = '';
+		var IsPreFunction = false;
+		
+		if (len(This.getAccess()) gt 0){
+			var IsPreFunction = true;
+			header = '#This.getAccess()#';
+		}
+		
+		if (len(This.getReturntype()) gt 0){
+			var IsPreFunction = true;
+			if(IsPreFunction){
+				header = ListAppend(header, '#This.getReturntype()#', ' ');
+			}
+			else{
+				header = '#This.getReturntype()#';
+			}
+			
+		}
+		
+		if(IsPreFunction){
+			header = ListAppend(header, 'function', ' ');
+		}
+		else{
+			header =	'	function';
+		}
+		
+		header = ListAppend(header, '#This.getName()#(' & generateCfscriptArguments()  & ')', ' ');
+		
+		if (len(This.getOutput()) gt 0){
+			header = ListAppend(header, 'output="#getOutput()#"', ' ');
+		}
+		
+		header = ListAppend(header, '{' & variables.lineBreak, ' ');
+		
+		return header;
+	}
 	
-	<cffunction name="generateCFScriptArguments" output="FALSE" access="private"  returntype="string" hint="" >
-		<cfset var results =""  />
-		
-		<cfloop array="#variables.arguments#" index="argObj">
-			<cfset results = ListAppend(results,argObj.getCFScript()) />
-		</cfloop>
-		
-		<cfset results = Replace(results, ",", ", ","ALL") />
-		
-		<cfreturn results />	
-	</cffunction>
+	private string function generateCFMLFooter(){
+		return '	</cffunction>' & variables.lineBreak;
+	}
 	
-	<cffunction name="generateCFMLLocalVariables" output="FALSE" access="private"  returntype="string" hint="" >
-		<cfset var results =""  />
-		<cfset var temp="" />
-		
-		<cfif ArrayLen(variables.localVariables) gt 0>
-			<cfset results = variables.linebreak  />
-		</cfif>
-		
-		<cfloop array="#variables.localVariables#" index="localVar">
-			
-			
-			<cfif len(localVar.value) gt 0>
-				<cfif localVar.quote>
-					<cfset temp = '		<cfset var #localVar.localvariable# = "#localVar.value#" />' & variables.lineBreak />
-				<cfelse>
-					<cfset temp = '		<cfset var #localVar.localvariable# = #localVar.value# />' & variables.lineBreak />
-				</cfif>
-				
-			<cfelseif CompareNoCase(localVar.type, "struct") eq 0>
-				<cfset temp = "		<cfset var #localVar.localvariable# = StructNew() />" & variables.lineBreak />
-			<cfelse>	
-				<cfset temp = "		<cfset var #localVar.localvariable# = """" />" & variables.lineBreak />
-			</cfif>
-			
-			<cfset results = results & temp />
-		</cfloop>
-		
-		<cfset results = results & variables.linebreak  />
-		
-		<cfreturn results />
-	</cffunction>
+	private string function generateCFScriptFooter(){
+		return '	}' & variables.lineBreak ;
+	}
 	
+	private string function generateCFMLArguments(){
+		var results ="";
+		var i = 0;
+		
+		for (i= 0; i lte arraylen(variables.arguments); i++){
+			results = results & "		" & variables.arguments[i].getCFML();
+		}
+		
+		return results;
+	}
 	
-	<cffunction name="generateCFScriptLocalVariables" output="FALSE" access="private"  returntype="string" hint="" >
-		<cfset var results =""  />
-		<cfset var temp="" />
+	private string function generateCFScriptArguments(){
+		var results ="";
+		var i = 0;
 		
-		<cfif ArrayLen(variables.localVariables) gt 0>
-			<cfset results = variables.linebreak  />
-		</cfif>
+		for (i= 1; i lte arraylen(variables.arguments); i++){
+			results = ListAppend(results,variables.arguments[1].getCFScript());
+		}
 		
-		<cfloop array="#variables.localVariables#" index="localVar">
+		results = Replace(results, ",", ", ","ALL");
+		
+		return results;
+	}
+	
+	private string function generateCFMLLocalVariables(){
+		var results ="";
+		var temp="";
+		var i = 0;
+		var localVar=StructNew();
+		
+		if (ArrayLen(variables.localVariables) gt 0){
+			results = variables.linebreak;
+		}
+		
+		for (i= 1; i lte arraylen(variables.localVariables); i++){
+			localVar = variables.localVariables[i];	
+		
+			if (len(localVar.value) gt 0){
+				if(localVar.quote){
+					temp = '		<cfset var #localVar.localvariable# = "#localVar.value#" />' & variables.lineBreak;
+				}
+				else{
+					temp = '		<cfset var #localVar.localvariable# = #localVar.value# />' & variables.lineBreak;
+				}
+			}	
+			else if (CompareNoCase(localVar.type, "struct") eq 0){
+				temp = "		<cfset var #localVar.localvariable# = StructNew() />" & variables.lineBreak;
+			}
+			else{	
+				temp = "		<cfset var #localVar.localvariable# = """" />" & variables.lineBreak;
+			}
 			
-			
-			<cfif len(localVar.value) gt 0>
-				<cfif localVar.quote>
-					<cfset temp = '		var #localVar.localvariable# = "#localVar.value#" ;' & variables.lineBreak />
-				<cfelse>
-					<cfset temp = '		var #localVar.localvariable# = #localVar.value# ;' & variables.lineBreak />
-				</cfif>
-				
-			<cfelseif CompareNoCase(localVar.type, "struct") eq 0>
-				<cfset temp = "		var #localVar.localvariable# = StructNew() ;" & variables.lineBreak />
-			<cfelse>	
-				<cfset temp = "		var #localVar.localvariable# = """" ;" & variables.lineBreak />
-			</cfif>
-			
-			<cfset results = results & temp />
-		</cfloop>
+			results = results & temp;
 		
-		<cfset results = results & variables.linebreak  />
+		}
 		
-		<cfreturn results />
-	</cffunction>
+		
+		return results;
+	}
+	
+	private string function generateCFScriptLocalVariables(){
+		var results ="";
+		var temp="";
+		var i = 0;
+		var localVar=StructNew();
+		
+		if (ArrayLen(variables.localVariables) gt 0){
+			results = variables.linebreak;
+		}
+		
+		for (i= 1; i lte arraylen(variables.localVariables); i++){
+			localVar = variables.localVariables[i];	
+		
+			if (len(localVar.value) gt 0){
+				if(localVar.quote){
+					temp = '		var #localVar.localvariable# = "#localVar.value#";' & variables.lineBreak;
+				}
+				else{
+					temp = '		var #localVar.localvariable# = #localVar.value#;' & variables.lineBreak;
+				}
+			}	
+			else if (CompareNoCase(localVar.type, "struct") eq 0){
+				temp = "		var #localVar.localvariable# = StructNew();" & variables.lineBreak;
+			}
+			else{	
+				temp = "		var #localVar.localvariable# = """";" & variables.lineBreak;
+			}
+			
+			results = results & temp;
+		
+		}
+		
+		
+		return results;
+		
+		
+		
+		
+	}
+	
+	public string function getCFML(){
+		var results="";
+
+		results = results & generateCFMLHeader();
+		results = results & generateCFMLArguments();
+		results = results & generateCFMLLocalVariables();
+		results = results & operation;
+		
+		if (compareNoCase(This.getReturnType(), "void") neq 0){
+			results = results.concat('		<cfreturn #This.getReturnResult()# />' & variables.lineBreak);
+		}
+		
+		results = results.concat(generateCFMLFooter()) ;
+
+		return results;
+	}
+	
+	public string function getCFScript(){
+		var results="";
+
+		results = results & generateCFScriptHeader();
+		results = results & generateCFScriptLocalVariables();
+		results = results & operationScript;
+		
+		if (compareNoCase(This.getReturnType(), "void") neq 0){
+			results = results.concat('		return #This.getReturnResult()#;' & variables.lineBreak);
+		}
+		
+		results = results.concat(generateCFScriptFooter()) ;
+
+		return results;
+	}
 	
 
-	<cffunction access="public" name="getCFML" output="false" returntype="string" description="Returns the actual cf function code.">
-		<cfset var i=0 />
-		<cfset var results="" />
-
-
-		<cfset results = results & generateCFMLHeader() />
-		<cfset results = results & generateCFMLArguments() />
-		<cfset results = results & generateCFMLLocalVariables() />
-		<cfset results = results & operation />
-		<cfif compareNoCase(getReturnType(), "void") neq 0>
-			<cfset results = results.concat('		<cfreturn #getReturnResult()# />' & variables.lineBreak) />
-		</cfif>
-		<cfset results = results.concat(generateCFMLFooter()) />
-
-		<cfreturn results />
-	</cffunction>
-	
-	
-	<cffunction access="public" name="getCFScript" output="false" returntype="string" description="Returns the actual cf function code.">
-		<cfset var i=0 />
-		<cfset var results="" />
-
-
-		<cfset results = results & generateCFScriptHeader() />
-		<cfset results = results & generateCFScriptLocalVariables() />
-		<cfset results = results & operationScript />
-		<cfif compareNoCase(getReturnType(), "void") neq 0>
-			<cfset results = results.concat('		return #getReturnResult()#;' & variables.lineBreak) />
-		</cfif>
-		<cfset results = results.concat(generateCFScriptFooter()) />
-
-		<cfreturn results />
-	</cffunction>
-</cfcomponent>
+}

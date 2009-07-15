@@ -1,133 +1,137 @@
-<cfcomponent>
+component{
 	
-	<cfproperty name="name" />
-	<cfproperty name="column" />
-	<cfproperty name="datatype" />
-	<cfproperty name="length" />
-	<cfproperty name="fieldtype" />
-	<cfproperty name="generator" />
-	<cfproperty name="fkcolumn" />
-	<cfproperty name="cfc" />
-	<cfproperty name="missingRowIgnored" type="boolean" default="true" />
-	<cfproperty name="inverse" type="boolean" default="true" />
-	<cfproperty name="cascade" />
-	<cfproperty name="collectiontype" />
-	<cfproperty name="singularName" />
+	property name="name";
+	property name="column";
+	property name="datatype";
+	property name="length";
+	property name="fieldtype";
+	property name="generator";
+	property name="fkcolumn";
+	property name="cfc";
+	property name="missingRowIgnored" type="boolean" default="true";
+	property name="inverse" type="boolean" default="true";
+	property name="cascade";
+	property name="collectiontype";
+	property name="singularName";
 	
-	<cffunction name="getCFML" output="FALSE" access="public"  returntype="string" hint="Gets the CFML for a property. " >
-		<cfset var result = "" />
+	
+	public string function getCFML(){
+		var result = "";
 		
-		<cfset result = result & '<cfproperty' />		
+		result = result & '<cfproperty';	
 		
-		<cfif len(getName())>
-			<cfset result = ListAppend(result, 'name="#getName()#"', " ") /> 
-       	</cfif>
-       	
-       	<cfif len(getColumn())>
-       		<cfset result = ListAppend(result, 'column="#getColumn()#"', " ") /> 
-       	</cfif>
+		if (len(This.getName())){
+			result = ListAppend(result, 'name="#This.getName()#"', " ") ;
+       	}
        
-      	<cfif len(getDatatype())>
-       		<cfset result = ListAppend(result, 'datatype="#getDatatype()#"', " ") /> 
-       	</cfif>
-       	
-       	<cfif len(getFieldtype())>
-       		<cfset result = ListAppend(result, 'fieldtype="#getFieldtype()#"', " ") /> 
-       	</cfif>
-       	
-       	<cfif len(getGenerator())>
-       		<cfset result = ListAppend(result, 'generator="#getGenerator()#"', " ") /> 
-       	</cfif>
-       	
-       	<cfif len(getCFC())>
-       		<cfset result = ListAppend(result, 'cfc="#getCFC()#"', " ") /> 
-       	</cfif>
-       	
-       	<cfif len(getFkColumn())>
-       		<cfset result = ListAppend(result, 'fkColumn="#getFkColumn()#"', " ") /> 
-       	</cfif>
-       	
-       	<cfif len(getmissingRowIgnored())>
-       		<cfset result = ListAppend(result, 'missingRowIgnored="#getmissingRowIgnored()#"', " ") /> 
-       	</cfif>
-       	
-       	<cfif len(getinverse())>
-       		<cfset result = ListAppend(result, 'inverse="#getinverse()#"', " ") /> 
-       	</cfif>
-       	
-       	<cfif len(getcascade())>
-       		<cfset result = ListAppend(result, 'cascade="#getcascade()#"', " ") /> 
-       	</cfif>
-       	
-       	<cfif len(getcollectiontype())>
-       		<cfset result = ListAppend(result, 'collectiontype="#getcollectiontype()#"', " ") /> 
-       	</cfif>
-       	
-       	<cfif len(getSingularName())>
-       		<cfset result = ListAppend(result, 'SingularName="#getSingularName()#"', " ") /> 
-       	</cfif>
-       	
-		<cfset result = result & ' />' />
-		
-		<cfreturn result />
-	</cffunction>
-	
-	<cffunction name="getCfScript" output="FALSE" access="public"  returntype="string" hint="Gets the CfScript for a property. " >
-		<cfset var result = "" />
-		
-		<cfset result = result & 'property' />		
-		
-		<cfif len(getName())>
-			<cfset result = ListAppend(result, 'name="#getName()#"', " ") /> 
-       	</cfif>
-       	
-       	<cfif len(getColumn())>
-       		<cfset result = ListAppend(result, 'column="#getColumn()#"', " ") /> 
-       	</cfif>
+       	if (len(This.getColumn())){
+       		result = ListAppend(result, 'column="#This.getColumn()#"', " ") ;
+       	}
        
-      	<cfif len(getDatatype())>
-       		<cfset result = ListAppend(result, 'datatype="#getDatatype()#"', " ") /> 
-       	</cfif>
+      	if (len(This.getDatatype())){
+       		result = ListAppend(result, 'datatype="#This.getDatatype()#"', " ") ;
+       	}
        	
-       	<cfif len(getFieldtype())>
-       		<cfset result = ListAppend(result, 'fieldtype="#getFieldtype()#"', " ") /> 
-       	</cfif>
+       	if (len(This.getFieldtype())){
+       		result = ListAppend(result, 'fieldtype="#This.getFieldtype()#"', " ") ;
+       	}
+       		
+       	if (len(This.getGenerator())){
+       		result = ListAppend(result, 'generator="#This.getGenerator()#"', " ") ;
+       	}
+       
+       	if (len(This.getCFC())){
+       		result = ListAppend(result, 'cfc="#This.getCFC()#"', " ") ;
+       	}
+       
+       	if (len(This.getFkColumn())){
+       		result = ListAppend(result, 'fkColumn="#This.getFkColumn()#"', " ") ;
+       	}
        	
-       	<cfif len(getGenerator())>
-       		<cfset result = ListAppend(result, 'generator="#getGenerator()#"', " ") /> 
-       	</cfif>
+       	if (len(This.getmissingRowIgnored())){
+       		result = ListAppend(result, 'missingRowIgnored="#This.getmissingRowIgnored()#"', " ") ; 
+       	}
        	
-       	<cfif len(getCFC())>
-       		<cfset result = ListAppend(result, 'cfc="#getCFC()#"', " ") /> 
-       	</cfif>
+       	if (len(This.getinverse())){
+       		result = ListAppend(result, 'inverse="#This.getinverse()#"', " ") ; 
+       	}
        	
-       	<cfif len(getFkColumn())>
-       		<cfset result = ListAppend(result, 'fkColumn="#getFkColumn()#"', " ") /> 
-       	</cfif>
+       	if (len(This.getcascade())){
+       		result = ListAppend(result, 'cascade="#This.getcascade()#"', " ") ;
+       	}
        	
-       	<cfif len(getmissingRowIgnored())>
-       		<cfset result = ListAppend(result, 'missingRowIgnored="#getmissingRowIgnored()#"', " ") /> 
-       	</cfif>
+       	if (len(This.getcollectiontype())){
+       		result = ListAppend(result, 'collectiontype="#This.getcollectiontype()#"', " ") ; 
+       	}
        	
-       	<cfif len(getinverse())>
-       		<cfset result = ListAppend(result, 'inverse="#getinverse()#"', " ") /> 
-       	</cfif>
+       	if (len(This.getSingularName())){
+       		result = ListAppend(result, 'SingularName="#This.getSingularName()#"', " ");
+       	}
        	
-       	<cfif len(getcascade())>
-       		<cfset result = ListAppend(result, 'cascade="#getcascade()#"', " ") /> 
-       	</cfif>
-       	
-       	<cfif len(getcollectiontype())>
-       		<cfset result = ListAppend(result, 'collectiontype="#getcollectiontype()#"', " ") /> 
-       	</cfif>
-       	
-       	<cfif len(getSingularName())>
-       		<cfset result = ListAppend(result, 'SingularName="#getSingularName()#"', " ") /> 
-       	</cfif>
-       	
-		<cfset result = result & ';' />
-		
-		<cfreturn result />
-	</cffunction>
+		result = result & ' />';
+		return result;
 	
-</cfcomponent>
+	}
+	
+	
+	public string function getCfScript(){
+		var result = "";
+		
+		result = result & 'property';	
+		
+		if (len(This.getName())){
+			result = ListAppend(result, 'name="#This.getName()#"', " ") ;
+       	}
+       
+       	if (len(This.getColumn())){
+       		result = ListAppend(result, 'column="#This.getColumn()#"', " ") ;
+       	}
+       
+      	if (len(This.getDatatype())){
+       		result = ListAppend(result, 'datatype="#This.getDatatype()#"', " ") ;
+       	}
+       	
+       	if (len(This.getFieldtype())){
+       		result = ListAppend(result, 'fieldtype="#This.getFieldtype()#"', " ") ;
+       	}
+       		
+       	if (len(This.getGenerator())){
+       		result = ListAppend(result, 'generator="#This.getGenerator()#"', " ") ;
+       	}
+       
+       	if (len(This.getCFC())){
+       		result = ListAppend(result, 'cfc="#This.getCFC()#"', " ") ;
+       	}
+       
+       	if (len(This.getFkColumn())){
+       		result = ListAppend(result, 'fkColumn="#This.getFkColumn()#"', " ") ;
+       	}
+       	
+       	if (len(This.getmissingRowIgnored())){
+       		result = ListAppend(result, 'missingRowIgnored="#This.getmissingRowIgnored()#"', " ") ; 
+       	}
+       	
+       	if (len(This.getinverse())){
+       		result = ListAppend(result, 'inverse="#This.getinverse()#"', " ") ; 
+       	}
+       	
+       	if (len(This.getcascade())){
+       		result = ListAppend(result, 'cascade="#This.getcascade()#"', " ") ;
+       	}
+       	
+       	if (len(This.getcollectiontype())){
+       		result = ListAppend(result, 'collectiontype="#This.getcollectiontype()#"', " ") ; 
+       	}
+       	
+       	if (len(This.getSingularName())){
+       		result = ListAppend(result, 'SingularName="#This.getSingularName()#"', " ");
+       	}
+       	
+		result = result & ';';
+		
+		return result;
+	
+	}
+	
+	
+}

@@ -1,198 +1,189 @@
-<!---    cfc.cfc
+component extends="CFPage"{
+	property string extends;
+	property string table;
+	property string entityname;
+	property name="output" type="boolean" default="false";
+	property name="persistent" type="boolean" default="false";
 
-CREATED				: Terrence Ryan
-DESCRIPTION			: Allows you to write the representation of CFC code to an object, for writing CFC's dynamically. .
----->
-<cfcomponent output="false" extends="CFPage" >
-
-	<cfproperty name="extends" />
-	<cfproperty name="output" type="boolean"  default="false"/>
-	<cfproperty name="persistent" type="boolean" default="false" />
-	<cfproperty name="table" />
-	<cfproperty name="entityname" />
-
-
-	<cffunction name="init" output="false" hint="Psuedo constructor, and all around nice function." >
+	public function init(){
 		
-		<cfset variables.lineBreak = createObject("java", "java.lang.System").getProperty("line.separator") />
-		<cfset setExtension('cfc') />
-		<cfset setOutput(FALSE) /> 
+		variables.lineBreak = createObject("java", "java.lang.System").getProperty("line.separator");
+		This.setExtension('cfc');
+		This.setOutput(FALSE); 
 		
-		<cfset variables.constructorArray = ArrayNew(1) />
-		<cfset variables.functionArray = ArrayNew(1) />
-		<cfset variables.propertyArray = ArrayNew(1) />
+		variables.constructorArray = ArrayNew(1);
+		variables.functionArray = ArrayNew(1);
+		variables.propertyArray = ArrayNew(1);
 		
+	}
+			
+	public string function generateCFMLHeader(){
+		var header = '<cfcomponent';
 		
-		<cfreturn This />
-	</cffunction>
-
-
-	<cffunction access="public" name="addfunction" output="FALSE" returntype="void" hint="Adds the code of a function to the CFC.">
-		<cfargument name="function" type="function" required="no" hint="The function to add to the cfc." />
-		<cfset ArrayAppend(variables.functionArray, arguments.function) />
-	</cffunction>
-
-	<cffunction access="public" name="addproperty" output="FALSE" returntype="void" hint="Adds the code of a property to the CFC.">
-		<cfargument name="property" type="property" required="no" hint="The property to add to the cfc." />
-		<cfset ArrayAppend(variables.propertyArray, arguments.property) />
-	</cffunction>
-
-	<cffunction name="generateCFMLHeader" output="FALSE" access="public"  returntype="string" hint="" >
-		<cfset var header = '<cfcomponent' />
+		if (len(This.getExtends()) gt 0){
+			header = ListAppend(header, 'extends="#This.getExtends()#"', ' ') ;
+		}
 		
-		<cfif len(getExtends()) gt 0>
-			<cfset header = ListAppend(header, 'extends="#getExtends()#"', ' ')  />
-		</cfif>
+		if (len(This.getPersistent())){
+			header = ListAppend(header, 'persistent="#This.getPersistent()#"', ' ') ;
+		}
 		
-		<cfif len(getPersistent())>
-			<cfset header = ListAppend(header, 'persistent="#getPersistent()#"', ' ')  />
-		</cfif>
+		if (len(This.getTable()) gt 0){
+			header = ListAppend(header, 'table="#This.getTable()#"', ' ') ;
+		}
 		
-		<cfif len(getTable()) gt 0>
-			<cfset header = ListAppend(header, 'table="#getTable()#"', ' ')  />
-		</cfif>
+		if (len(This.getEntityName()) gt 0){
+			header = ListAppend(header, 'entityName="#This.getEntityName()#"', ' ') ;
+		}
 		
-		<cfif len(getEntityName()) gt 0>
-			<cfset header = ListAppend(header, 'entityName="#getEntityName()#"', ' ')  />
-		</cfif>
+		if (This.getOutput()){
+			header = ListAppend(header, 'output="#This.getOutput()#"', ' ') ;
+		}
 		
-		<cfif getOutput()>
-			<cfset header = ListAppend(header, 'output="#getOutput()#"', ' ')  />
-		</cfif>
+		header = ListAppend(header, '>' & variables.lineBreak, ' ') ;
 		
-		<cfset header = ListAppend(header, '>' & variables.lineBreak, ' ')  />
-		
-		<cfreturn header />
-	</cffunction>
+		return header;
 	
-	<cffunction name="generateCFScriptHeader" output="FALSE" access="public"  returntype="string" hint="" >
-		<cfset var header = 'component' />
-		
-		<cfif len(getExtends()) gt 0>
-			<cfset header = ListAppend(header, 'extends="#getExtends()#"', ' ')  />
-		</cfif>
-		
-		<cfif len(getPersistent())>
-			<cfset header = ListAppend(header, 'persistent="#getPersistent()#"', ' ')  />
-		</cfif>
-		
-		<cfif len(getTable()) gt 0>
-			<cfset header = ListAppend(header, 'table="#getTable()#"', ' ')  />
-		</cfif>
-		
-		<cfif len(getEntityName()) gt 0>
-			<cfset header = ListAppend(header, 'entityName="#getEntityName()#"', ' ')  />
-		</cfif>
-		
-		<cfif getOutput()>
-			<cfset header = ListAppend(header, 'output="#getOutput()#"', ' ')  />
-		</cfif>
-		
-		<cfset header = ListAppend(header, '{' & variables.lineBreak, ' ')  />
-		
-		<cfreturn header />
-	</cffunction>
+	}
 	
-	<cffunction name="generateCFMLFooter" output="FALSE" access="private"  returntype="string" hint="" >
-		<cfset var footer = '</cfcomponent>' & variables.lineBreak />
-		<cfreturn footer />
-	</cffunction>
-	
-	<cffunction name="generateCFScriptFooter" output="FALSE" access="private"  returntype="string" hint="" >
-		<cfset var footer = '}' & variables.lineBreak />
-		<cfreturn footer />
-	</cffunction>
-	
-	<cffunction name="generateCFMLProperties" output="FALSE" access="private"  returntype="string" hint="" >
-		<cfif ArrayLen(variables.propertyArray) eq 0>
-			<cfreturn "" />
-		</cfif>
-		<cfset var props = variables.lineBreak />
+	public string function generateCFScriptHeader(){
+		var header = 'component';
 		
-		<cfloop array="#variables.propertyArray#" index="propObj">
-			<cfset props = props & "	" & propObj.getCFML() & variables.lineBreak  />
-		</cfloop>
-		<cfreturn props />
-	</cffunction>
+		if (len(This.getExtends()) gt 0){
+			header = ListAppend(header, 'extends="#This.getExtends()#"', ' ') ;
+		}
+		
+		if (len(This.getPersistent())){
+			header = ListAppend(header, 'persistent="#This.getPersistent()#"', ' ') ;
+		}
+		
+		if (len(This.getTable()) gt 0){
+			header = ListAppend(header, 'table="#This.getTable()#"', ' ') ;
+		}
+		
+		if (len(This.getEntityName()) gt 0){
+			header = ListAppend(header, 'entityName="#This.getEntityName()#"', ' ') ;
+		}
+		
+		if (This.getOutput()){
+			header = ListAppend(header, 'output="#This.getOutput()#"', ' ') ;
+		}
+		
+		header = ListAppend(header, '{' & variables.lineBreak, ' ') ;
+		
+		return header;
 	
-	<cffunction name="generateCFScriptProperties" output="FALSE" access="private"  returntype="string" hint="" >
-		<cfif ArrayLen(variables.propertyArray) eq 0>
-			<cfreturn "" />
-		</cfif>
-		<cfset var props = variables.lineBreak />
-		<cfloop array="#variables.propertyArray#" index="propObj">
-			<cfset props = props & "	" & propObj.getCFScript() & variables.lineBreak  />
-		</cfloop>
-		<cfreturn props />
-	</cffunction>
+	}
 	
-	<cffunction name="generateCFMLConstructor" output="FALSE" access="private"  returntype="string" hint="" >
-		<cfif ArrayLen(variables.constructorArray) eq 0>
-			<cfreturn "" />
-		</cfif>
-		<cfset var constructor = variables.lineBreak />
-		<cfloop array="#variables.constructorArray#" index="constructorLine">
-			<cfset constructor = constructor & "	" & constructorLine & variables.lineBreak  />
-		</cfloop>
-		<cfreturn constructor />
-	</cffunction>
+	public string function generateCFMLFooter(){
+		var footer = '</cfcomponent>' & variables.lineBreak;
+		return footer;
+	}
 	
-	<cffunction name="generateCFScriptConstructor" output="FALSE" access="private"  returntype="string" hint="" >
-		<cfif ArrayLen(variables.constructorArray) eq 0>
-			<cfreturn "" />
-		</cfif>
-		<cfset var constructor = variables.lineBreak />
-		<cfloop array="#variables.constructorArray#" index="constructorLine">
-			<cfset constructor = constructor & "	" & constructorLine & variables.lineBreak  />
-		</cfloop>
-		<cfreturn constructor />
-	</cffunction>
+	public string function generateCFScriptFooter(){
+		var footer = '}' & variables.lineBreak;
+		return footer;
+	}
 	
-	<cffunction name="generateCFMLFunctions" output="FALSE" access="private"  returntype="string" hint="" >
-		<cfset var body = "" />
-		<cfloop array="#variables.functionArray#" index="funcObj">
-			<cfset body = body & variables.lineBreak & funcObj.getCFML() />
-		</cfloop>
-		<cfset body = body & variables.lineBreak />
-		<cfreturn body />
-	</cffunction>
+	private string function generateCFMLProperties(){
+		if (ArrayLen(variables.propertyArray) eq 0){
+			return "";
+		}
+		
+		var props = variables.lineBreak;
+		var i = 0;
+		
+		for (i = 1; i lte ArrayLen(variables.propertyArray); i++){
+			props = props & "	" & variables.propertyArray[i].getCFML() & variables.lineBreak ;
+		}
+		
+		return props;
+	}
 	
-	<cffunction name="generateCFScriptFunctions" output="FALSE" access="private"  returntype="string" hint="" >
-		<cfset var body = "" />
-		<cfloop array="#variables.functionArray#" index="funcObj">
-			<cfset body = body & variables.lineBreak & funcObj.getCFScript()  />
-		</cfloop>
-		<cfset body = body & variables.lineBreak />
-		<cfreturn body />
-	</cffunction>
+	private string function generateCFScriptProperties(){
+		if (ArrayLen(variables.propertyArray) eq 0){
+			return "";
+		}
+		
+		var props = variables.lineBreak;
+		var i = 0;
+		
+		for (i = 1; i lte ArrayLen(variables.propertyArray); i++){
+			props = props & "	" & variables.propertyArray[i].getCFSCript() & variables.lineBreak ;
+		}
+		
+		return props;
+	}
+	
+	private string function generateCFMLFunctions(){
+		var body = "";
+		
+		
+		
+		for (i = 1; i lte ArrayLen(variables.functionArray); i++){
+			body = body & "	" & variables.functionArray[i].getCFML();
+		}
+		
+		body = body & variables.lineBreak;
+		return body;
+	
+	}
+	
+	private string function generateCFScriptFunctions(){
+		var body = "";
+		
+		for (i = 1; i lte ArrayLen(variables.functionArray); i++){
+			body =  body & variables.lineBreak & "	" & variables.functionArray[i].getCFScript();
+		}
+		
+		body = body & variables.lineBreak;
+		return body;
+	
+	}
+	
+	private string function generateCFMLConstructor(){
+		return "";
+	
+	}
+	
+	private string function generateCFScriptConstructor(){
+		return "";
+	
+	}
+	
+	public string function getCFML(){
+		var results = "";
 
-	<cffunction access="public" name="getCFML" output="false" returntype="string" hint="Returns the actual cfml cfc code.">
-		<cfset var results = "" />
+		results = results & generateCFMLHeader();
+		results = results & generateCFMLProperties()  ;
+		results = results & generateCFMLFunctions();
+		results = results & generateCFMLFooter();
 
-		<!--- Add the header to the cfc feed. --->
-		<cfset results = results & generateCFMLHeader() />
-		<cfset results = results & generateCFMLProperties()   />
-		<cfset results = results & generateCFMLConstructor() />
-		<cfset results = results & generateCFMLFunctions() />
-		<!--- Add the footer to the cfc feed. --->
-		<cfset results = results & generateCFMLFooter() />
-
-		<cfreturn results />
-	</cffunction>
+		return results;
+	}	
 	
-	<cffunction access="public" name="getCFScript" output="false" returntype="string" hint="Returns the actual CFScript cfc code.">
-		<cfset var results = "" />
+	public string function getCFScript(){
+		var results = "";
 
-		<!--- Add the header to the cfc feed. --->
-		<cfset results = results & generateCFScriptHeader() />
-		<cfset results = results & generateCFScriptProperties()   />
-		<cfset results = results & generateCFScriptConstructor() />
-		<cfset results = results & generateCFScriptFunctions() />
-		<!--- Add the footer to the cfc feed. --->
-		<cfset results = results & generateCFScriptFooter() />
+		results = results & generateCFScriptHeader();
+		results = results & generateCFScriptProperties()  ;
+		results = results & generateCFScriptFunctions();
+		results = results & generateCFScriptFooter();
 
-		<cfreturn results />
-	</cffunction>
+		return results;
+	}	
+	
+	public void function addFunction(required functionObj){
+		ArrayAppend(variables.functionArray, arguments.functionObj);
+	}
+
+	public void function addProperty(required property property){
+		ArrayAppend(variables.propertyArray, arguments.property);
+	}
+
 	
 
-</cfcomponent>
+
+}
+
+	

@@ -10,13 +10,13 @@ DESCRIPTION			: Allows you to write the representation of customtag code to an o
 		<cfargument name="name" type="string" required="yes" />
 		<cfargument name="fileLocation" type="string" required="yes"  />
 		
-		<cfset setExtension('cfm') />
-		<cfset setName(arguments.Name) />
-		<cfset setFileLocation(arguments.fileLocation) />
+		<cfset This.setExtension('cfm') />
+		<cfset This.setName(arguments.Name) />
+		<cfset This.setFileLocation(arguments.fileLocation) />
 		
 		<cfset variables.lineBreak = createObject("java", "java.lang.System").getProperty("line.separator") />
 
-		<cfset variables.header = "<!--- #getName()#.cfm --->" & variables.lineBreak & '<cfprocessingdirective suppresswhitespace="yes">' & variables.lineBreak />
+		<cfset variables.header = "<!--- #This.getName()#.cfm --->" & variables.lineBreak & '<cfprocessingdirective suppresswhitespace="yes">' & variables.lineBreak />
 		<cfset variables.attributes = "" />
 		<cfset variables.body = CreateObject("java","java.lang.StringBuilder").Init() />
 		<cfset variables.footer = "</cfprocessingdirective>" & variables.lineBreak & '<cfexit method="exitTag" />' & variables.lineBreak  />
