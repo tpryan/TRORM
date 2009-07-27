@@ -2,7 +2,7 @@ component{
 	
 	property name="name";
 	property name="column";
-	property name="datatype";
+	property name="ormtype";
 	property name="length";
 	property name="fieldtype";
 	property name="generator";
@@ -28,8 +28,8 @@ component{
        		result = ListAppend(result, 'column="#This.getColumn()#"', " ") ;
        	}
        
-      	if (len(This.getDatatype())){
-       		result = ListAppend(result, 'datatype="#This.getDatatype()#"', " ") ;
+      	if (len(This.getormtype())){
+       		result = ListAppend(result, 'ormtype="#This.getormtype()#"', " ") ;
        	}
        	
        	if (len(This.getFieldtype())){
@@ -87,8 +87,8 @@ component{
        		result = ListAppend(result, 'column="#This.getColumn()#"', " ") ;
        	}
        
-      	if (len(This.getDatatype())){
-       		result = ListAppend(result, 'datatype="#This.getDatatype()#"', " ") ;
+      	if (len(This.getormtype())){
+       		result = ListAppend(result, 'ormtype="#This.getormtype()#"', " ") ;
        	}
        	
        	if (len(This.getFieldtype())){

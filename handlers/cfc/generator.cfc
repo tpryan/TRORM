@@ -133,7 +133,7 @@ component{
 	       	property = New property();
 	       	property.setName(LCase(tableData.columns.column_name[i]));
 	       	//property.setColumn(tableData.columns.column_name[i]);
-	       	property.setDatatype(datatype);
+	       	property.setOrmType(datatype);
 	       	
 	       	if (tableData.columns.column_size[i] gt 0){
 	       		property.setLength(tableData.columns.column_size[i]);
