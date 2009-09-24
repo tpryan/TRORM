@@ -118,13 +118,13 @@ component extends="CFPage"{
 	private string function generateCFMLFunctions(){
 		var body = "";
 		
-		
+		body = body & variables.lineBreak;
 		
 		for (i = 1; i lte ArrayLen(variables.functionArray); i++){
 			body = body & "	" & variables.functionArray[i].getCFML();
+			body = body & variables.lineBreak;
 		}
 		
-		body = body & variables.lineBreak;
 		return body;
 	
 	}

@@ -82,23 +82,44 @@ component{
 		func.setName("search");
 		func.setAccess("remote");
 		func.setReturnType("array");
-		func.addLocalVariable("#table#","any","New #table#()", false);
+		func.addLocalVariable("hqlString","string","FROM employees ");
+		func.addLocalVariable("whereClause","string","");
+		
+		var arg = New Argument();
+		arg.setName("q");
+		arg.setType("string");
+		arg.setDefaultValue("");
+		func.addArgument(arg);
+		
+		
+		
+		
+		func.AddOperationScript('		if (len(arguments.q) gt 0){');		
+		func.AddOperation('		<cfif len(arguments.q) gt 0>');
 		
 		
 		for (i=1;i lte tableData.columns.recordCount; i++){
-			var arg = New Argument();
 			var column = Lcase(tableData.columns.column_name[i]);
-			arg.setName("#column#");
-			arg.setType("any");
-			arg.setDefaultValue("");
-			func.addArgument(arg);
-			func.AddOperationScript('		if (len(arguments.#column#) gt 0) #table#.set#column#(arguments.#column#);');		
-			func.AddOperation('		<cfif len(arguments.#column#) gt 0>');
-			func.AddOperation('			<cfset #table#.set#column#(arguments.#column#) />');		
-			func.AddOperation('		</cfif>' & variables.lineBreak);
+			func.AddOperationScript('			whereClause  = ListAppend(whereClause, " #column# LIKE ''%##arguments.q##%''", "|"); 	  ');		
+			
+			func.AddOperation('				<cfset whereClause  = ListAppend(whereClause, " #column# LIKE ''%##arguments.q##%''", "|") />');		
 		}
 		
-		func.setReturnResult('EntityLoadbyExample("#table#")');
+		func.AddOperationScript('			whereClause = Replace(whereClause, "|", " OR ", "all");');	
+		func.AddOperation('			<cfset whereClause = Replace(whereClause, "|", " OR ", "all") />');	
+		
+		func.AddOperationScript('		}');		
+		func.AddOperation('		</cfif>');
+		
+		func.AddOperationScript('		if (len(whereClause) gt 0){');	
+		func.AddOperationScript('			hqlString = hqlString & " WHERE " & whereClause;');	
+		func.AddOperationScript('		}');	
+		
+		func.AddOperation('		<cfif if len(whereClause) gt 0>');
+		func.AddOperation('			<cfset hqlString = hqlString & " WHERE " & whereClause />');
+		func.AddOperation('		</cfif>');
+		
+		func.setReturnResult('ormExecuteQuery(hqlString)');
 		cfc.addFunction(func);		
 		
 		return cfc;

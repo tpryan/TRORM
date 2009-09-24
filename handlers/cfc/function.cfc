@@ -35,7 +35,7 @@ component{
 	}
 
 	public string function generateCFMLHeader(){
-		var header = '	<cffunction';
+		var header = '<cffunction';
 		
 		if (len(This.getName()) gt 0){
 			header = ListAppend(header, 'name="#This.getName()#"', ' ');
@@ -108,7 +108,7 @@ component{
 		var results ="";
 		var i = 0;
 		
-		for (i= 0; i lte arraylen(variables.arguments); i++){
+		for (i= 1; i lte arraylen(variables.arguments); i++){
 			results = results & "		" & variables.arguments[i].getCFML();
 		}
 		
@@ -120,7 +120,7 @@ component{
 		var i = 0;
 		
 		for (i= 1; i lte arraylen(variables.arguments); i++){
-			results = ListAppend(results,variables.arguments[1].getCFScript());
+			results = ListAppend(results,variables.arguments[i].getCFScript());
 		}
 		
 		results = Replace(results, ",", ", ","ALL");
