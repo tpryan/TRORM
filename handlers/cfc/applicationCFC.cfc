@@ -1,4 +1,4 @@
-component extends="cfc"{
+component extends="cfc" accessors="true" {
 	
 	public applicationCFC function init(){
 		variables.lineBreak = createObject("java", "java.lang.System").getProperty("line.separator");

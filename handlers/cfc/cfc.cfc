@@ -1,4 +1,4 @@
-component extends="CFPage"{
+component extends="CFPage" accessors="true" {
 	property string extends;
 	property string table;
 	property string entityname;

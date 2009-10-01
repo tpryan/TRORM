@@ -1,4 +1,4 @@
-component{
+component accessors="true" {
 	
 	property name="name";
 	property name="type";

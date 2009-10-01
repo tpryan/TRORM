@@ -18,6 +18,7 @@ component{
 	    var dataIntrospector =  New dataIntrospection(dbname);
 	    var tableData = dataIntrospector.getTableData(table);
 	    
+		
 		if (listlen(table,'.') eq 2){
 			table= listgetat(table,2,'.');
 		}
@@ -32,7 +33,7 @@ component{
 		var func= CreateObject('component','function').init();
 		func.setName('list');
 		func.setAccess('remote');
-		func.setReturnType('array');
+		func.setReturnType("cfc.#table#[]");
 		func.setReturnResult('EntityLoad("#table#")');
 		cfc.addFunction(func);
 		
@@ -81,8 +82,8 @@ component{
 		var func= CreateObject('component','function').init();
 		func.setName("search");
 		func.setAccess("remote");
-		func.setReturnType("array");
-		func.addLocalVariable("hqlString","string","FROM employees ");
+		func.setReturnType("cfc.#table#[]");
+		func.addLocalVariable("hqlString","string","FROM #table# ");
 		func.addLocalVariable("whereClause","string","");
 		
 		var arg = New Argument();
@@ -100,9 +101,11 @@ component{
 		
 		for (i=1;i lte tableData.columns.recordCount; i++){
 			var column = Lcase(tableData.columns.column_name[i]);
-			func.AddOperationScript('			whereClause  = ListAppend(whereClause, " #column# LIKE ''%##arguments.q##%''", "|"); 	  ');		
 			
-			func.AddOperation('				<cfset whereClause  = ListAppend(whereClause, " #column# LIKE ''%##arguments.q##%''", "|") />');		
+			if (FindNoCase("char",tableData.columns.type_name[i])){
+				func.AddOperationScript('			whereClause  = ListAppend(whereClause, " #column# LIKE ''%##arguments.q##%''", "|"); 	  ');		
+				func.AddOperation('				<cfset whereClause  = ListAppend(whereClause, " #column# LIKE ''%##arguments.q##%''", "|") />');		
+			}
 		}
 		
 		func.AddOperationScript('			whereClause = Replace(whereClause, "|", " OR ", "all");');	
@@ -249,7 +252,6 @@ component{
 	    appCFC.addApplicationProperty('ormenabled', true) ;
 	    appCFC.addApplicationProperty('datasource', dbname) ;
 	    appCFC.addApplicationProperty("customTagPaths", "ExpandPath('customtags/')", false) ;
-	    appCFC.addApplicationProperty("ormsettings", "{cfclocation = ExpandPath('cfc/') }", false) ;
 	    
 		return appCFC ;
 	

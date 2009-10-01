@@ -1,4 +1,4 @@
-<cfcomponent extends="component">
+<cfcomponent extends="component" accessors="true" >
 	
 	
 	<cffunction name="init" output="false" hint="Psuedo constructor, and all around nice function." >

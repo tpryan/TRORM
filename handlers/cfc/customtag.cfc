@@ -3,7 +3,7 @@
 CREATED				: Terrence Ryan
 DESCRIPTION			: Allows you to write the representation of customtag code to an object, for writing customtags's dynamically. .
 ---->
-<cfcomponent output="false" extends="CFPage" >
+<cfcomponent output="false" extends="CFPage" accessors="true" >
 
 
 	<cffunction name="init" output="false" hint="Psuedo constructor, and all around nice function." >

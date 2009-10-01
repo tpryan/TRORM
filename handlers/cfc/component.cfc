@@ -3,7 +3,7 @@
 CREATED				: Terrence Ryan
 DESCRIPTION			: Allows you to write the representation of CFC code to an object, for writing CFC's dynamically. .
 ---->
-<cfcomponent output="false" extends="CFPage" displayname="CFC (ColdFusion Component)" hint="A CFC representation of a generated CFC." >
+<cfcomponent output="false" extends="CFPage" displayname="CFC (ColdFusion Component)" accessors="true"  hint="A CFC representation of a generated CFC." >
 
 	<cfproperty name="extends" />
 	<cfproperty name="output" type="boolean"  default="false"/>

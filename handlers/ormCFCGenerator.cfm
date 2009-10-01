@@ -1,9 +1,9 @@
-<!---<cffile action="write" file="/Users/terry/Sites/centaur.dev/TerryRyansORMCodeJumpstart/sample.xml" output="#ideeventInfo#" />
---->
-<!---<cffile action="read" file="/Users/terryr/Sites/centaur.dev/TerryRyansORMCodeJumpstart/sample.xml" variable="ideeventInfo" />
+<!---
+<cffile action="read" file="/Users/terryr/Sites/centaur.dev/TerryRyansORMCodeJumpstart/sample.xml" variable="ideeventInfo" />
 --->
 <cfset generator = CreateObject('component', 'cfc.generator').init() />
 <cfset boltInfo = parseBoltInput(ideeventinfo) />
+
 
 <cfif boltInfo.view>
 	<cfset conditionallyCreateDirectory("#boltInfo.location#/customTags/")/>

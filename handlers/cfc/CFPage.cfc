@@ -1,4 +1,4 @@
-<cfcomponent displayname="CFPage" hint="A cfc representation of a cfpage. ">
+<cfcomponent displayname="CFPage" hint="A cfc representation of a cfpage." accessors="true" >
 	<cfproperty name="name" hint="The name of the page" />
 	<cfproperty name="fileLocation" hint="File path of the page" />
 	<cfproperty name="extension" />
