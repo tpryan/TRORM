@@ -10,12 +10,12 @@
 		<contribution target="rdsview" >
 			<menu name="TRORM Code Jumpstart">
 		    	<action name="Generate ORM CFC" handlerid="ormCFCGenerator" >
-					<input name="Location" label="Enter location" tooltip="Location where generated CFCs will be stored" type="dir" default="{$projectlocation}"/>			
+		    		<input name="Location" default="{$projectlocation}" label="Enter destination" tooltip="Location where generated CFCs will be stored" type="projectdir"/>
 					<input name="generateAppCFC" label="Generate Application CFC" tooltip="Generate Application CFC along with ORM CFC" type="boolean"/>	
 					<input name="generateView" label="Generate View" tooltip="Generate View template along with ORM CFC" type="boolean"/>
 					<input name="generateRemoteServices" label="Generate Remote Services" tooltip="Whether or not to create services for use with Gumbo" type="boolean"/>
 					<input name="ORMAsCFscript" label="Generate CFCs in script" tooltip="Whether or not you want your CFC's in cfscript." type="boolean"/>
-					<input name="DoAll" label="Generate content for all table" tooltip="Whether or not you want all of yoru table wired up." type="boolean"/>
+					<input name="DoAll" label="Generate content for all tables" tooltip="Whether or not you want all of your table wired up." type="boolean"/>
 				</action>
 			</menu>
 		</contribution>

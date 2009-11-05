@@ -2,6 +2,7 @@ component accessors="true" {
 	
 	property name="name";
 	property name="column";
+	property name="type";
 	property name="ormtype";
 	property name="length";
 	property name="fieldtype";
@@ -30,6 +31,10 @@ component accessors="true" {
        
       	if (len(This.getormtype())){
        		result = ListAppend(result, 'ormtype="#This.getormtype()#"', " ") ;
+       	}
+		
+		if (len(This.gettype())){
+       		result = ListAppend(result, 'type="#This.gettype()#"', " ") ;
        	}
        	
        	if (len(This.getFieldtype())){
@@ -89,6 +94,10 @@ component accessors="true" {
        
       	if (len(This.getormtype())){
        		result = ListAppend(result, 'ormtype="#This.getormtype()#"', " ") ;
+       	}
+		
+		if (len(This.gettype())){
+       		result = ListAppend(result, 'type="#This.gettype()#"', " ") ;
        	}
        	
        	if (len(This.getFieldtype())){

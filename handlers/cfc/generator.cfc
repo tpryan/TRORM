@@ -17,7 +17,7 @@ component{
 	    var fileLocation = BoltInfo.location;
 	    var dataIntrospector =  New dataIntrospection(dbname);
 	    var tableData = dataIntrospector.getTableData(table);
-	    
+	    var cfcPath = BoltInfo.cfcPath;
 		
 		if (listlen(table,'.') eq 2){
 			table= listgetat(table,2,'.');
@@ -33,7 +33,7 @@ component{
 		var func= CreateObject('component','function').init();
 		func.setName('list');
 		func.setAccess('remote');
-		func.setReturnType("cfc.#table#[]");
+		func.setReturnType("#cfcPath#.cfc.#table#[]");
 		func.setReturnResult('EntityLoad("#table#")');
 		cfc.addFunction(func);
 		
@@ -82,7 +82,7 @@ component{
 		var func= CreateObject('component','function').init();
 		func.setName("search");
 		func.setAccess("remote");
-		func.setReturnType("cfc.#table#[]");
+		func.setReturnType("#cfcPath#.cfc.#table#[]");
 		func.addLocalVariable("hqlString","string","FROM #table# ");
 		func.addLocalVariable("whereClause","string","");
 		
@@ -158,6 +158,7 @@ component{
 	       	property.setName(LCase(tableData.columns.column_name[i]));
 	       	//property.setColumn(tableData.columns.column_name[i]);
 	       	property.setOrmType(datatype);
+			property.setType(datatype);
 	       	
 	       	if (tableData.columns.column_size[i] gt 0){
 	       		property.setLength(tableData.columns.column_size[i]);
@@ -527,8 +528,17 @@ component{
 	    result.dbname=XMLDoc.event.ide.rdsview.database[1].XMLAttributes.name;    
 	    result.table=XMLDoc.event.ide.rdsview.database[1].table[1].XMLAttributes.name;        
 	    result.location = location[1].XMLAttributes.value;
+		result.cfcPath = findCFCPathFromFilePath(result.location);
 
 		return result;	
+	}
+	
+	public string function findCFCPathFromFilePath(string path){
+		var results = "";
+		var webroot = ExpandPath("/");
+		results = replace(arguments.path, webroot, "", "one");
+	
+		return results;
 	}	
 	
 }
