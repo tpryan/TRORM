@@ -125,11 +125,10 @@
 </cffunction>		
 
 <cffunction access="public" name="conditionallyCreateDirectory" output="false" returntype="void" description="Checks to see if a directory exists if it doesn't it creates it." >
-		<cfargument name="directory" type="string" required="yes" default="" hint="Driectory to create if it doesn't already exist." />
+	<cfargument name="directory" type="string" required="yes" default="" hint="Driectory to create if it doesn't already exist." />
 
-		<cfif not DirectoryExists(arguments.directory)>
-			<cfdirectory directory="#arguments.directory#" action="create" />
-		</cfif>
-
-	</cffunction>
+	<cfif not DirectoryExists(arguments.directory)>
+		<cfdirectory directory="#arguments.directory#" action="create" />
+	</cfif>
+</cffunction>
 			
