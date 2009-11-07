@@ -118,7 +118,7 @@ component{
 		func.AddOperationScript('			hqlString = hqlString & " WHERE " & whereClause;');	
 		func.AddOperationScript('		}');	
 		
-		func.AddOperation('		<cfif if len(whereClause) gt 0>');
+		func.AddOperation('		<cfif len(whereClause) gt 0>');
 		func.AddOperation('			<cfset hqlString = hqlString & " WHERE " & whereClause />');
 		func.AddOperation('		</cfif>');
 		

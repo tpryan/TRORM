@@ -12,7 +12,6 @@
 <cfif boltInfo.view>
 	<cfset conditionallyCreateDirectory("#boltInfo.location#/customTags/")/>
 	<cffile action="copy" source="#ExpandPath('./storage/pageWrapper.cfm')#" destination="#boltInfo.location#/customTags/pageWrapper.cfm" />
-
 </cfif>
 
 
@@ -27,8 +26,8 @@
 	</cfif>
 	
 	<cfset index.write() >
-	
 </cfif>
+
 <!--- Get table name even if the tablespace or namespace gets automatically appended. --->
 <cfset tableName = ListLast(XMLParse(ideeventInfo).event.IDE.rdsview.database.table.XMLAttributes['name'], ".") />
 
