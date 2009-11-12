@@ -2,6 +2,7 @@
 <cfscript >
 	dbfields.int="integer";
 	dbfields.integer="integer";
+	dbfields['INT UNSIGNED']="integer";
 	dbfields.smallint="short";
 	dbfields.number="big_decimal";
 	dbfields.number="big_decimal";
