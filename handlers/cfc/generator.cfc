@@ -3,6 +3,7 @@ component{
 	public generator function init(){
 		variables.lineBreak = createObject("java", "java.lang.System").getProperty("line.separator");	
 		variables.ormmapper = CreateObject("component", "mappings");
+		variables.constants = New constants(); 
 	
 		import ".*";
 	
@@ -481,24 +482,38 @@ component{
 		ct.AppendBody('<cfelse>');
 		ct.AppendBody('	<p></p>');
 		ct.AppendBody('</cfif>');
-		ct.AppendBody('<table>');
-		ct.AppendBody('	<tbody>');
+		ct.AppendBody('<cfform action="?method=edit_process" method="post" format="html">');
 		ct.AppendBody('	<cfoutput>');
-		ct.AppendBody('	<form action="?method=edit_process" method="post">');
+		ct.AppendBody('	<table>');
+		ct.AppendBody('	<tbody>');
 		
 		
-		//writeDump(tableData);
-		//abort;
+		
+		
 		for (i = 1; i lte tableData.columns.recordCount; i++){
 		 	if (not tableData.columns.is_foreignkey[i]){
-		 		
+		 	
+				columnName = tableData.columns.column_name[i];
+					
 		 		if (tableData.columns.is_primarykey[i]){
-		 			ct.AppendBody('			<input name="#tableData.columns.column_name[i]#" type="hidden" value="###table#.get#tableData.columns.column_name[i]#()##" />');
+		 			ct.AppendBody('			<input name="#columnName#" type="hidden" value="###table#.get#columnName#()##" />');
 		 		}
-		 		else{
-		 			ct.AppendBody('		<tr>');
-		 			ct.AppendBody('			<th><label for="#tableData.columns.column_name[i]#">#tableData.columns.column_name[i]#:</label></th>');
-		 			ct.AppendBody('			<td><input name="#tableData.columns.column_name[i]#" type="text" id="#tableData.columns.column_name[i]#" value="###table#.get#tableData.columns.column_name[i]#()##" /></td>');
+				else{
+		 			uitype = constants.getUIType(tableData.columns.type_name[i]);
+					
+					
+					ct.AppendBody('		<tr>');
+					
+					//Create different UI's depending on data type.
+					if (compareNoCase(uitype, "date") eq 0){
+						ct.AppendBody('			<th><label for="#columnName#">#columnName#:</label></th>');
+		 				ct.AppendBody('			<td><cfinput name="#columnName#" type="datefield" id="#columnName#" value="##DateFormat(#table#.get#columnName#(),''mm/dd/yyyy'')##" /></td>');
+					}
+					else{
+						ct.AppendBody('			<th><label for="#columnName#">#columnName#:</label></th>');
+		 				ct.AppendBody('			<td><input name="#columnName#" type="text" id="#columnName#" value="###table#.get#columnName#()##" /></td>');
+					}
+					
 					ct.AppendBody('		</tr>');
 				}
 			}
@@ -507,15 +522,11 @@ component{
 		ct.AppendBody('			<th />');
 		ct.AppendBody('			<td><input name="save" type="submit" value="Save" /></td>');
 		ct.AppendBody('		</tr>');
-		ct.AppendBody('	</form>');
+		
 		ct.AppendBody('	</cfoutput>');
 		ct.AppendBody('	</tbody>');
-		
-		
-		
-		
-		
-		ct.AppendBody('</table>');
+		ct.AppendBody('	</table>');
+		ct.AppendBody('</cfform>');
 	    
 	    return ct;
 	}
